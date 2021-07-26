@@ -2,10 +2,19 @@
 
 The server used during development and the setting of static html files
 
+## install 
+```
+$ npm i esbuild-server-plugin -D
+```
+
+## usage 
+
+Use in esbuild config
+
 ```js
 import esbuild from "esbuild";
 import path from "path";
-import esbuildHtmlPlugin from "./plugin-dist/esbuild-server";
+import esbuildHtmlPlugin from "plugin-dist/esbuild-server";
 
 const __dirname = path.resolve();
 
@@ -46,7 +55,7 @@ esbuild
   .catch(() => process.exit(1));
 ```
 
-## template 
+## html template 
 
 ```html
 <!DOCTYPE html>
@@ -55,7 +64,7 @@ esbuild
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= config.tittle %></title>
+    <title><%= config.title %></title>
     
     <% config.css.forEach(function(url){ %>
     <link rel="stylesheet" href="<%= url %>" />

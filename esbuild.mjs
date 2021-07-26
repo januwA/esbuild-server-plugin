@@ -20,11 +20,11 @@ esbuild
         template: path.resolve(__dirname, "index.html"),
         js: ["/index.js"],
         css: ["/index.css"],
-        // server: {
-        //   port: 3000,
-        //   before() {},
-        //   after() {},
-        // },
+        server: {
+          port: 3000,
+          before() {},
+          after() {},
+        },
       }),
     ],
   })
