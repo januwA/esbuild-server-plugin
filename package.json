@@ -1,6 +1,6 @@
 {
   "name": "esbuild-server-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "description": "The server used during development and the setting of static html files",
   "main": "./plugin-dist/esbuild-server-plugin.js",
@@ -29,15 +29,16 @@
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.12",
     "@types/livereload": "^0.9.1",
-    "connect-livereload": "^0.6.1",
-    "ejs": "^3.1.6",
     "esbuild": "^0.12.15",
-    "express": "^4.17.1",
-    "fs-extra": "^10.0.0",
-    "livereload": "^0.9.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "typescript": "^4.3.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "connect-livereload": "^0.6.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
+    "livereload": "^0.9.3"
+  }
 }

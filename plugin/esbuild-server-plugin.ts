@@ -58,10 +58,6 @@ export default function esbuildServerPlugin(config: Config) {
         if (config.server?.before) config.server?.before(app, build, config);
 
         const staticpath = build.initialOptions.outdir;
-        const liveReloadServer = livereload.createServer();
-        liveReloadServer.watch(staticpath);
-
-        app.use(connectLivereload());
         app.use(express.static(staticpath));
 
         // user hook
@@ -70,6 +66,12 @@ export default function esbuildServerPlugin(config: Config) {
         app.listen(port, () => {
           console.log(`Dev Server listening at http://localhost:${port}`);
         });
+
+        const liveReloadServer = livereload.createServer();
+        liveReloadServer.watch(staticpath);
+        liveReloadServer.watch(config.template);
+        app.use(connectLivereload());
+        
       } else {
         build.onEnd((result) => {
           parseHtmltemplate(build, config);
