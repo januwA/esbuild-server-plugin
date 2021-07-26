@@ -1,0 +1,43 @@
+{
+  "name": "esbuild-server-plugin",
+  "version": "1.0.0",
+  "private": false,
+  "description": "The server used during development and the setting of static html files",
+  "main": "./plugin-dist/esbuild-server-plugin.js",
+  "module": "./plugin-dist/esbuild-server-plugin.js",
+  "types": "./plugin-dist/esbuild-server-plugin.d.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node esbuild.mjs",
+    "build:plugin": "wsl rm -rf plugin-dist && tsc"
+  },
+  "keywords": [
+    "esbuild",
+    "devserver",
+    "esbuild-server-plugin"
+  ],
+  "author": "Ajanuw",
+  "license": "MIT",
+  "homepage": "https://github.com/januwA/esbuild-server-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/januwA/esbuild-server-plugin.git"
+  },
+  "devDependencies": {
+    "@types/connect-livereload": "^0.5.32",
+    "@types/ejs": "^3.0.7",
+    "@types/express": "^4.17.13",
+    "@types/fs-extra": "^9.0.12",
+    "@types/livereload": "^0.9.1",
+    "connect-livereload": "^0.6.1",
+    "ejs": "^3.1.6",
+    "esbuild": "^0.12.15",
+    "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
+    "livereload": "^0.9.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {}
+}
