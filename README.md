@@ -14,7 +14,7 @@ Use in esbuild config
 ```js
 import esbuild from "esbuild";
 import path from "path";
-import esbuildHtmlPlugin from "plugin-dist/esbuild-server";
+import esbuildServerPlugin from "esbuild-server-plugin";
 
 const __dirname = path.resolve();
 
@@ -30,7 +30,7 @@ esbuild
     watch: true,
 
     plugins: [
-      esbuildHtmlPlugin({
+      esbuildServerPlugin({
 
         //   Custom data
         title: "document",

@@ -1,6 +1,6 @@
 import esbuild from "esbuild";
 import path from "path";
-import esbuildHtmlPlugin from "./plugin-dist/esbuild-server-plugin.js";
+import esbuildServerPlugin from "./plugin-dist/esbuild-server-plugin.js";
 
 const __dirname = path.resolve();
 
@@ -15,7 +15,7 @@ esbuild
     },
     assetNames: 'asserts/[name]',
     plugins: [
-      esbuildHtmlPlugin({
+      esbuildServerPlugin({
         title: "document",
         template: path.resolve(__dirname, "index.html"),
         js: ["/index.js"],
