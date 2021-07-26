@@ -10,6 +10,6 @@ declare type Config = {
         after?: (app: Express, build: esbuild.PluginBuild, config: Config) => void;
     };
 };
-export default function esbuildServerPlugin(config: Config): esbuild.Plugin;
+export declare function esbuildServerPlugin(config: Config): esbuild.Plugin;
 export {};
 //# sourceMappingURL=esbuild-server-plugin.d.ts.map

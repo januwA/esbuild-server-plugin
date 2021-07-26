@@ -14,7 +14,7 @@ Use in esbuild config
 ```js
 import esbuild from "esbuild";
 import path from "path";
-import esbuildServerPlugin from "esbuild-server-plugin";
+import { esbuildServerPlugin } from "esbuild-server-plugin";
 
 const __dirname = path.resolve();
 
@@ -80,5 +80,4 @@ esbuild
 
   </body>
 </html>
-
 ```

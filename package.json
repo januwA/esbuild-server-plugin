@@ -1,15 +1,17 @@
 {
   "name": "esbuild-server-plugin",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "private": false,
   "description": "The server used during development and the setting of static html files",
-  "main": "./plugin-dist/esbuild-server-plugin.js",
-  "module": "./plugin-dist/esbuild-server-plugin.js",
-  "types": "./plugin-dist/esbuild-server-plugin.d.ts",
-  "type": "module",
+  "main": "./plugin-dist/cjs/esbuild-server-plugin.js",
+  "module": "./plugin-dist/esm/esbuild-server-plugin.js",
+  "types": "./plugin-dist/types/esbuild-server-plugin.d.ts",
   "scripts": {
-    "start": "node esbuild.mjs",
-    "build:plugin": "wsl rm -rf plugin-dist && tsc"
+    "start": "node esbuild.config.mjs",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:types": "tsc --project tsconfig.types.json",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:types"
   },
   "keywords": [
     "esbuild",
@@ -35,6 +37,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "chokidar": "^3.5.2",
     "connect-livereload": "^0.6.1",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
