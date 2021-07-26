@@ -1,5 +1,6 @@
 import esbuild from "esbuild";
 import path from "path";
+import fs from "fs";
 import { esbuildServerPlugin } from "./plugin-dist/cjs/esbuild-server-plugin.js";
 
 const __dirname = path.resolve();
@@ -15,18 +16,22 @@ esbuild
       ".jpg": "file",
     },
     assetNames: "asserts/[name]",
-    // external: ["react", "react-dom"],
     plugins: [
       esbuildServerPlugin({
         title: "document",
         template: path.resolve(__dirname, "index.html"),
         js: ["/index.js"],
         css: ["/index.css"],
-        // server: {
-        //   port: 3000,
-        //   before() {},
-        //   after() {},
-        // },
+        server: {
+          port: 3000,
+          before() {},
+          after() {},
+          httpsOptions: {
+            port: 443,
+            key: fs.readFileSync("D:\\ajanuw\\ssl\\dev.ajanuw.com.key"),
+            cert: fs.readFileSync("D:\\ajanuw\\ssl\\dev.ajanuw.com.crt"),
+          },
+        },
       }),
     ],
   })
