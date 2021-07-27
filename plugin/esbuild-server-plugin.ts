@@ -4,31 +4,46 @@ import path from "path";
 import ejs from "ejs";
 import express, { Express } from "express";
 import livereload from "livereload";
-import connectLivereload from "connect-livereload";
+import {
+  connectLivereload,
+  Options as ConnectLivereloadOptions,
+} from "ajanuw-connect-livereload";
 import chokidar from "chokidar";
 import https from "https";
 import { KeyObject } from "tls";
 
 const defaultconfig = {
-  title: undefined,
   filename: "index.html",
-  template: undefined,
-  server: undefined,
 };
 
 type Config = {
-  title?: string;
-  filename?: "index.html";
+  /**
+   * default: index.html
+   */
+  filename?: string;
+  
   template: string;
   server?: {
+    /**
+     * default: 3000
+     */
     port?: number;
     before?: (app: Express, build: esbuild.PluginBuild, config: Config) => void;
     after?: (app: Express, build: esbuild.PluginBuild, config: Config) => void;
+
     httpsOptions?: {
+      /**
+       * default: 443
+       */
       port?: number;
       key?: string | Buffer | (Buffer | KeyObject)[];
       cert?: string | Buffer | (string | Buffer)[];
     };
+
+    /**
+     * connect-livereload options
+     */
+    connectLivereload?: ConnectLivereloadOptions;
   };
 };
 
@@ -62,15 +77,18 @@ export function esbuildServerPlugin(config: Config) {
         renderHtmltemplate(build, config);
 
         const app = express();
-
+        const port = config.server?.port ?? 3000;
         const staticpath = build.initialOptions.outdir;
-        app.use(express.static(staticpath));
-        app.use(connectLivereload());
 
-        // user hook
         if (config.server?.before) config.server?.before(app, build, config);
 
-        const port = config.server?.port ?? 3000;
+        app.use(
+          connectLivereload({
+            protocol: config.server?.httpsOptions ? "https" : undefined,
+            ...(config.server.connectLivereload ?? {}),
+          })
+        );
+        app.use(express.static(staticpath));
 
         if (config.server?.httpsOptions) {
           const httpsport = config.server?.httpsOptions?.port ?? 443;
@@ -88,13 +106,17 @@ export function esbuildServerPlugin(config: Config) {
               );
             });
         }
+
         app.listen(port, () => {
           console.log(`Dev Server listening at http://127.0.0.1:${port}`);
         });
 
-        const liveReloadServer = livereload.createServer();
-        liveReloadServer.watch(staticpath);
-        // user hook
+        // liveReload
+        const lrserver = livereload.createServer({
+          https: config.server?.httpsOptions,
+        });
+        lrserver.watch(staticpath);
+
         if (config.server?.after) config.server?.after(app, build, config);
       } else {
         build.onEnd(() => {
@@ -104,7 +126,6 @@ export function esbuildServerPlugin(config: Config) {
 
       // 监听template模板改变重新render
       chokidar.watch(config.template).on("all", (event, path) => {
-        // console.log(event, path);
         renderHtmltemplate(build, config);
       });
     },

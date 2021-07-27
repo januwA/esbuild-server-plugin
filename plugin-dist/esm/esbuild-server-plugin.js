@@ -3,13 +3,11 @@ import path from "path";
 import ejs from "ejs";
 import express from "express";
 import livereload from "livereload";
-import connectLivereload from "connect-livereload";
+import { connectLivereload, } from "ajanuw-connect-livereload";
 import chokidar from "chokidar";
+import https from "https";
 const defaultconfig = {
-    title: undefined,
     filename: "index.html",
-    template: undefined,
-    server: undefined,
 };
 async function renderHtmltemplate(build, config) {
     if (!fs.existsSync(config.template))
@@ -35,21 +33,36 @@ export function esbuildServerPlugin(config) {
                 await fs.ensureDir(build.initialOptions.outdir);
                 renderHtmltemplate(build, config);
                 const app = express();
+                const port = config.server?.port ?? 3000;
                 const staticpath = build.initialOptions.outdir;
-                app.use(connectLivereload());
-                // user hook
                 if (config.server?.before)
                     config.server?.before(app, build, config);
+                app.use(connectLivereload({
+                    protocol: config.server?.httpsOptions ? "https" : undefined,
+                    ...(config.server.connectLivereload ?? {}),
+                }));
                 app.use(express.static(staticpath));
-                // user hook
+                if (config.server?.httpsOptions) {
+                    const httpsport = config.server?.httpsOptions?.port ?? 443;
+                    https
+                        .createServer({
+                        key: config.server?.httpsOptions?.key,
+                        cert: config.server?.httpsOptions?.cert,
+                    }, app)
+                        .listen(httpsport, () => {
+                        console.log(`Dev Server listening at https://127.0.0.1:${httpsport}`);
+                    });
+                }
+                app.listen(port, () => {
+                    console.log(`Dev Server listening at http://127.0.0.1:${port}`);
+                });
+                // liveReload
+                const lrserver = livereload.createServer({
+                    https: config.server?.httpsOptions,
+                });
+                lrserver.watch(staticpath);
                 if (config.server?.after)
                     config.server?.after(app, build, config);
-                const port = config.server?.port ?? 3000;
-                app.listen(port, () => {
-                    console.log(`Dev Server listening at http://localhost:${port}`);
-                });
-                const liveReloadServer = livereload.createServer();
-                liveReloadServer.watch(staticpath);
             }
             else {
                 build.onEnd(() => {
@@ -58,7 +71,6 @@ export function esbuildServerPlugin(config) {
             }
             // 监听template模板改变重新render
             chokidar.watch(config.template).on("all", (event, path) => {
-                // console.log(event, path);
                 renderHtmltemplate(build, config);
             });
         },

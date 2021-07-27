@@ -11,7 +11,7 @@ const Btn = () => {
 
 render(
   <div className="app">
-    <h2>hello esbuild xx</h2>
+    <h2>esbuild devserver</h2>
     <img src={imgg} alt="" />
     <Btn></Btn>
   </div>,
